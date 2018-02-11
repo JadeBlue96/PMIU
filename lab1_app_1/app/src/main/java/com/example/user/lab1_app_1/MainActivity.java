@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
                 .resize(600,600).noFade().into(m_im, new Callback() {
             @Override
             public void onSuccess() {
-                m_txt.setText("Loaded successful!");
+                m_txt.setText("Loaded successfully!");
             }
 
             @Override
