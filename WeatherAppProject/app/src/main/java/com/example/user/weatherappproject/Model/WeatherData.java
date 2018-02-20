@@ -3,7 +3,6 @@ package com.example.user.weatherappproject.Model;
 import java.util.List;
 
 /**
- * Created by User on 16/02/2018.
  *
  * {"coord":
  {"lon":145.77,"lat":-16.92},

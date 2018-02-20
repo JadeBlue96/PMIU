@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         m_in_city_name=(EditText)findViewById(R.id.input_city_id);
 
         if (savedInstanceState != null) {
-            if (getLastCustomNonConfigurationInstance() != null) {
+            if (getLastCustomNonConfigurationInstance() != null) { //retain previous loading program state
                 mWeatherData = (TestWeatherData) getLastCustomNonConfigurationInstance();
                 Log.d(TAG,"onCreate(): Reusing retained data set");
             }
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             mWeatherData = new TestWeatherData();
             Log.d(TAG, "onCreate(): Creating new  data set");
         }
-        mWeatherData.setAppContext(this);
+        mWeatherData.setAppContext(this);            //Create a new WeakReference to MainActivity
         if(mWeatherData.m_data!=null)
         {
             updateWeatherData(mWeatherData.m_data);
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mWeatherData.setAppContext(null);
+        mWeatherData.setAppContext(null);            //WeatherData references NULL
         Log.d(TAG,"Destroy");
     }
 
@@ -125,10 +125,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
         return mWeatherData;
-    }
+    } //retain previous loading program state
 
     public void showWeather(View view) {
-        hideKeyboard(MainActivity.this,m_in_city_name.getWindowToken());
+        hideKeyboard(MainActivity.this,m_in_city_name.getWindowToken()); //Retrieve a unique token identifying the window this view is attached to
         String city=m_in_city_name.getText().toString();
         if(city.isEmpty())
         {
@@ -142,15 +142,13 @@ public class MainActivity extends AppCompatActivity {
     public static void hideKeyboard(Activity activity,
                                     IBinder windowToken) {
         InputMethodManager mgr = (InputMethodManager) activity.getSystemService
-                (Context.INPUT_METHOD_SERVICE);
-        mgr.hideSoftInputFromWindow(windowToken, 0);
+                (Context.INPUT_METHOD_SERVICE);   //get a handle for the current service
+        mgr.hideSoftInputFromWindow(windowToken, 0);  //hide input window for current token 0-HIDE_IMPLICIT_ONLY
     }
 
     void updateWeatherData(final WeatherData data) {
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+
                 mProgBar = (ProgressBar) findViewById(R.id.prog_id);
                 m_in_city_name = (EditText) findViewById(R.id.input_city_id);
                 m_city_name = (TextView) findViewById(R.id.city_id);
@@ -204,25 +202,25 @@ public class MainActivity extends AppCompatActivity {
                 String iconURL="http://openweathermap.org/img/w/"+Text+".png";
                 Picasso.with(getBaseContext()).load(iconURL).into(m_icon);
 
-            }
 
 
-        });
+
+
     }
 
 
 
     private static class TestWeatherData {
         private final String TAG = "WeatherTest";
-        private WeakReference<MainActivity> m_ac_ref;
+        private WeakReference<MainActivity> m_ac_ref;          //allows all elements in MainActivity to be garbage collected
         private WeatherData m_data;
         private RESTAdapter rest_adapter;
-        private AtomicBoolean download_in_progress = new AtomicBoolean(false);
-        private Callback<WeatherData> m_callback = new Callback<WeatherData>() {
+        private AtomicBoolean download_in_progress = new AtomicBoolean(false);  //flag for multiple threads
+        private Callback<WeatherData> m_callback = new Callback<WeatherData>() {     //generate a response from the server
             @Override
             public void success(WeatherData weatherData, Response response) {
-                DateFormat local = new SimpleDateFormat("yyyy/mm/dd hh:mm:ss", Locale.UK);
-                Date sunrise = new Date(weatherData.getSunrise() * 1000);
+                DateFormat local = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.UK);
+                Date sunrise = new Date(weatherData.getSunrise() * 1000);  //m/s to s
                 Date sunset = new Date(weatherData.getSunset() * 1000);
                 Log.d(TAG, "\nExecution success.. Name:" + weatherData.getName()
                         + ", Coordinates: (Latitude: " + weatherData.getLat() + ", Longtitude: " + weatherData.getLon() + ")"
@@ -232,17 +230,13 @@ public class MainActivity extends AppCompatActivity {
                         "Country: " + weatherData.getCountry() + ", COD: " + weatherData.getCod());
 
                 m_data = weatherData;
-                if (m_ac_ref.get() != null) {
+                if (m_ac_ref.get() != null) {                               //Update data on screen using reference to MainActivity
                     m_ac_ref.get().updateWeatherData(m_data);
-                    m_ac_ref.get().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            m_ac_ref.get().mProgBar = (ProgressBar) m_ac_ref.get().findViewById(R.id.prog_id);
-                            m_ac_ref.get().mProgBar.setVisibility(View.INVISIBLE);
-                        }
-                    });
-
+                    m_ac_ref.get().mProgBar = (ProgressBar) m_ac_ref.get().findViewById(R.id.prog_id);
+                    m_ac_ref.get().mProgBar.setVisibility(View.INVISIBLE);
                 }
+
+
                 download_in_progress.set(false);
             }
 
@@ -254,13 +248,8 @@ public class MainActivity extends AppCompatActivity {
                 download_in_progress.set(false);
                 if (m_ac_ref.get() != null) {
 
-                    m_ac_ref.get().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
                             m_ac_ref.get().mProgBar = (ProgressBar) m_ac_ref.get().findViewById(R.id.prog_id);
                             m_ac_ref.get().mProgBar.setVisibility(View.INVISIBLE);
-                        }
-                    });
 
                 }
             }
@@ -284,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-            try {
+            try {                                           //Attempt to execute query to weather server
                 download_in_progress.set(true);
                 rest_adapter.getWeather(city, m_callback);
             } catch (Exception e) {
@@ -302,6 +291,6 @@ public class MainActivity extends AppCompatActivity {
 
         boolean isDownloadInProgress() {
             return download_in_progress.get();
-        }
+        } //set to true right before weather query
     }
 }

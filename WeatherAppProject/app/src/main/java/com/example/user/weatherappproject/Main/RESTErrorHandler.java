@@ -23,7 +23,7 @@ public class RESTErrorHandler implements retrofit.ErrorHandler {
     @Override
     public Throwable handleError(RetrofitError cause) {
         Response r=cause.getResponse();
-        if(r!=null && r.getStatus()==401)
+        if(r!=null && r.getStatus()==401)  //401-Unauthorized Client
         {
             Log.e(TAG,"Error:",cause);
         }

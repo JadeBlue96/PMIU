@@ -22,7 +22,7 @@ public class RESTAdapter {
 
     public RESTAdapter() {
         m_adapter=new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.FULL)  //Log the headers, body, and metadata for both requests and responses.
                 .setEndpoint(WEATHER_URL)
                 .setErrorHandler(new RESTErrorHandler())
                 .build();
