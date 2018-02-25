@@ -15,14 +15,14 @@
     android:scrollbarAlwaysDrawVerticalTrack="true">
  <LinearLayout
      android:layout_width="match_parent"
-     android:layout_height="match_parent"
+     android:layout_height="wrap_content"
      android:orientation="vertical">
     <EditText
         android:id="@+id/input_city_id"
         android:layout_width="352dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="city,country"
+        android:hint="@string/city_country"
         android:textColorHint="@color/colorAccent">
 
 
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:onClick="showWeather"
-        android:text="Display weather"
+        android:text="@string/display_weather"
         android:id="@+id/show_weather_id"
         android:layout_marginTop="10dp"
         android:textColor="@color/Black" />
@@ -50,10 +50,11 @@
             android:layout_marginTop="8dp"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
-            android:textSize="30dp"
+            android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginLeft="8dp" />
+            android:layout_marginLeft="8dp"
+            android:paddingStart="5dp" />
 
         <TextView
             android:id="@+id/country_id"
@@ -62,10 +63,11 @@
             android:layout_marginStart="8dp"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
-            android:textSize="25dp"
+            android:textSize="25sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/city_id"
-            android:layout_marginLeft="8dp" />
+            android:layout_marginLeft="8dp"
+            android:paddingStart="5dp" />
 
         <TextView
             android:id="@+id/coords_id"
@@ -75,10 +77,11 @@
             android:layout_marginTop="8dp"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/country_id"
-            android:layout_marginLeft="8dp" />
+            android:layout_marginLeft="8dp"
+            android:paddingStart="5dp" />
 
         <TextView
             android:id="@+id/cod_id"
@@ -88,10 +91,11 @@
             android:layout_marginTop="8dp"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/coords_id"
-            android:layout_marginLeft="8dp" />
+            android:layout_marginLeft="8dp"
+            android:paddingStart="5dp" />
 
         <ImageView
             android:id="@+id/id_w_icon"
@@ -103,7 +107,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginRight="8dp" />
+            android:layout_marginRight="8dp"
+            android:contentDescription="@string/icon" />
     </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
@@ -199,7 +204,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:theme="@style/RedAccent"/>
 
  </LinearLayout>
 </ScrollView>

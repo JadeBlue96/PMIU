@@ -1,5 +1,8 @@
 package com.example.user.weatherappproject.Model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -20,14 +23,41 @@ import java.util.List;
  */
 
 public class WeatherData {
+
+    @SerializedName("coord")
+    @Expose
     private Coord coord;
+
+    @SerializedName("cod")
+    @Expose
     private int cod;
+
+    @SerializedName("base")
+    @Expose
     private String base;
+
+    @SerializedName("name")
+    @Expose
     private String name;
+
+    @SerializedName("main")
+    @Expose
     private Main main;
+
+    @SerializedName("weather")
+    @Expose
     private List<Weather> weather;
+
+    @SerializedName("sys")
+    @Expose
     private Sys sys;
+
+    @SerializedName("wind")
+    @Expose
     private Wind wind;
+
+    @SerializedName("clouds")
+    @Expose
     private Clouds clouds;
 
 

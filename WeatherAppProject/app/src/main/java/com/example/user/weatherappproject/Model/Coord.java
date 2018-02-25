@@ -1,11 +1,19 @@
 package com.example.user.weatherappproject.Model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by User on 18/02/2018.
  */
 
 public class Coord {
+    @SerializedName("lat")
+    @Expose
     double lat;
+
+    @SerializedName("lon")
+    @Expose
     double lon;
 
     public Coord(double lat, double lon) {

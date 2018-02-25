@@ -21,37 +21,32 @@ import com.example.user.weatherappproject.R;
 import com.example.user.weatherappproject.Model.WeatherData;
 import com.squareup.picasso.Picasso;
 
-import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     protected final String TAG=getClass().getSimpleName();
-    private TestWeatherData mWeatherData;
+    private TestWeatherData weatherData;
 
 
-    private ProgressBar mProgBar;
-    private EditText m_in_city_name;
-    private TextView m_city_name;
-    private TextView m_country_name;
-    private TextView m_coords;
-    private TextView m_temp;
-    private TextView m_sunrise;
-    private TextView m_sunset;
-    private TextView m_cod;
-    private TextView m_wind;
-    private TextView m_clouds;
-    private TextView m_wmain;
-    private TextView m_wdesc;
-    private ImageView m_icon;
+    protected ProgressBar progBar;
+    private EditText in_city_name;
+    private TextView city_name;
+    private TextView country_name;
+    private TextView coords;
+    private TextView temp;
+    private TextView sunrise;
+    private TextView sunset;
+    private TextView cod;
+    private TextView wind;
+    private TextView clouds;
+    private TextView wmain;
+    private TextView wdesc;
+    private ImageView icon;
 
 
     @Override
@@ -61,81 +56,51 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        mProgBar=(ProgressBar)findViewById(R.id.prog_id);
-        m_in_city_name=(EditText)findViewById(R.id.input_city_id);
+        progBar=(ProgressBar)findViewById(R.id.prog_id);
+        in_city_name=(EditText)findViewById(R.id.input_city_id);
 
         if (savedInstanceState != null) {
             if (getLastCustomNonConfigurationInstance() != null) { //retain previous loading program state
-                mWeatherData = (TestWeatherData) getLastCustomNonConfigurationInstance();
+                weatherData = (TestWeatherData) getLastCustomNonConfigurationInstance();
                 Log.d(TAG,"onCreate(): Reusing retained data set");
             }
         } else {
-            mWeatherData = new TestWeatherData();
+            weatherData = new TestWeatherData();
             Log.d(TAG, "onCreate(): Creating new  data set");
         }
-        mWeatherData.setAppContext(this);            //Create a new WeakReference to MainActivity
-        if(mWeatherData.m_data!=null)
+        weatherData.setAppContext(this);            //Create a new WeakReference to MainActivity
+        if(weatherData.m_data!=null)
         {
-            updateWeatherData(mWeatherData.m_data);
+            updateWeatherData(weatherData.m_data);
         }
+        setProgBarVisibility();
 
-        if(mWeatherData.isDownloadInProgress())
-        {
-            mProgBar.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            mProgBar.setVisibility(View.INVISIBLE);
-        }
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mWeatherData.setAppContext(null);            //WeatherData references NULL
+        weatherData.setAppContext(null);            //WeatherData references NULL
         Log.d(TAG,"Destroy");
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
 
 
     @Override
     public Object onRetainCustomNonConfigurationInstance() {
-        return mWeatherData;
+        return weatherData;
     } //retain previous loading program state
 
     public void showWeather(View view) {
-        hideKeyboard(MainActivity.this,m_in_city_name.getWindowToken()); //Retrieve a unique token identifying the window this view is attached to
-        String city=m_in_city_name.getText().toString();
+        hideKeyboard(MainActivity.this,in_city_name.getWindowToken()); //Retrieve a unique token identifying the window this view is attached to
+        String city=in_city_name.getText().toString();
         if(city.isEmpty())
         {
             Toast.makeText(getApplicationContext(),"No city or country has been entered!",Toast.LENGTH_LONG).show();
             return;
         }
-        mWeatherData.TestAsyncCall(city);
+        weatherData.TestAsyncCall(city);
     }
 
     //Hide keyboard after the URL has been typed
@@ -146,151 +111,76 @@ public class MainActivity extends AppCompatActivity {
         mgr.hideSoftInputFromWindow(windowToken, 0);  //hide input window for current token 0-HIDE_IMPLICIT_ONLY
     }
 
+    public void setProgBarVisibility()
+    {
+        if(weatherData.isDownloadInProgress())
+        {
+            progBar.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            progBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    void formatReceivedData(final WeatherData data)
+    {
+        String Text ="City:" + data.getName();             //City Name
+        city_name.setText(Text);
+        Text ="Country:" + data.getCountry();              //Country Name
+        country_name.setText(Text);
+        Text = "Coordinates:" +"(" + data.getLat() + "," + data.getLon() + ")";       //Coordinates
+        coords.setText(Text);
+        Text = "COD:"+ data.getCod();                           //Code
+        cod.setText(Text);
+        Text = String.format(Locale.UK, "Temperature: %.2f C", data.getTemp()-273.15);        //Temperature in Celsius
+        temp.setText(Text);
+        Text="Weather status:"+data.getWeatherMain();           //Weather main status
+        wmain.setText(Text);
+        Text="Weather Description:"+data.getWeatherDesc();      //Weather description
+        wdesc.setText(Text);
+        Text="Wind Speed:"+data.getWindSpd()+"m/s, Degrees:"+data.getWindDeg();         //Wind speed in m/s
+        wind.setText(Text);
+        Text="Cloud Percentage:"+data.getCloudPer()+"%";                //Clouds percentage
+        clouds.setText(Text);
+        DateFormat local = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.UK);
+        Date d_sunrise = new Date(data.getSunrise() * 1000);           //Sunrise date up to seconds
+        Date d_sunset = new Date(data.getSunset() * 1000);              //Sunset date up to seconds
+        Text = "Sunrise:" + local.format(d_sunrise);
+        sunrise.setText(Text);
+        Text = "Sunset:" + local.format(d_sunset);
+        sunset.setText(Text);
+        Text=data.getWeatherIcon();
+        String iconURL="http://openweathermap.org/img/w/"+Text+".png";       //Weather icon ID information
+        Picasso.with(getBaseContext()).load(iconURL).into(icon);
+    }
     void updateWeatherData(final WeatherData data) {
 
 
-                mProgBar = (ProgressBar) findViewById(R.id.prog_id);
-                m_in_city_name = (EditText) findViewById(R.id.input_city_id);
-                m_city_name = (TextView) findViewById(R.id.city_id);
-                m_country_name = (TextView) findViewById(R.id.country_id);
-                m_cod = (TextView) findViewById(R.id.cod_id);
-                m_coords = (TextView) findViewById(R.id.coords_id);
-                m_temp = (TextView) findViewById(R.id.temp_id);
-                m_sunrise = (TextView) findViewById(R.id.sunrise_id);
-                m_sunset = (TextView) findViewById(R.id.sunset_id);
-                m_clouds=(TextView)findViewById(R.id.clouds_per_id);
-                m_wind=(TextView)findViewById(R.id.wind_id);
-                m_wmain=(TextView)findViewById(R.id.main_id);
-                m_wdesc=(TextView)findViewById(R.id.desc_id);
-                m_icon=(ImageView)findViewById(R.id.id_w_icon);
+                progBar = (ProgressBar) findViewById(R.id.prog_id);
+                in_city_name = (EditText) findViewById(R.id.input_city_id);
+                city_name = (TextView) findViewById(R.id.city_id);
+                country_name = (TextView) findViewById(R.id.country_id);
+                cod = (TextView) findViewById(R.id.cod_id);
+                coords = (TextView) findViewById(R.id.coords_id);
+                temp = (TextView) findViewById(R.id.temp_id);
+                sunrise = (TextView) findViewById(R.id.sunrise_id);
+                sunset = (TextView) findViewById(R.id.sunset_id);
+                clouds=(TextView)findViewById(R.id.clouds_per_id);
+                wind=(TextView)findViewById(R.id.wind_id);
+                wmain=(TextView)findViewById(R.id.main_id);
+                wdesc=(TextView)findViewById(R.id.desc_id);
+                icon=(ImageView)findViewById(R.id.id_w_icon);
 
 
-                if (mWeatherData.isDownloadInProgress()) {
-                    mProgBar.setVisibility(View.VISIBLE);
-                } else {
-                    mProgBar.setVisibility(View.INVISIBLE);
-                }
-
-                Resources res = getResources();
-                String Text ="City:" + data.getName();
-                m_city_name.setText(Text);
-                Text ="Country:" + data.getCountry();
-                m_country_name.setText(Text);
-                Text = "Coordinates:" +"(" + data.getLat() + "," + data.getLon() + ")";
-                m_coords.setText(Text);
-                Text = "COD:"+ data.getCod();
-                m_cod.setText(Text);
-                Text = String.format(Locale.UK, "Temperature: %.2f C", data.getTemp()-273.15);
-                m_temp.setText(Text);
-                Text="Weather status:"+data.getWeatherMain();
-                m_wmain.setText(Text);
-                Text="Weather Description:"+data.getWeatherDesc();
-                m_wdesc.setText(Text);
-                Text="Wind Speed:"+data.getWindSpd()+"m/s, Degrees:"+data.getWindDeg();
-                m_wind.setText(Text);
-                Text="Cloud Percentage:"+data.getCloudPer()+"%";
-                m_clouds.setText(Text);
-                DateFormat local = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.UK);
-                Date sunrise = new Date(data.getSunrise() * 1000);
-                Date sunset = new Date(data.getSunset() * 1000);
-                Text = "Sunrise:" + local.format(sunrise);
-                m_sunrise.setText(Text);
-                Text = "Sunset:" + local.format(sunset);
-                m_sunset.setText(Text);
-
-                Text=data.getWeatherIcon();
-                String iconURL="http://openweathermap.org/img/w/"+Text+".png";
-                Picasso.with(getBaseContext()).load(iconURL).into(m_icon);
-
-
-
+                setProgBarVisibility();
+                formatReceivedData(data);
 
 
     }
 
 
 
-    private static class TestWeatherData {
-        private final String TAG = "WeatherTest";
-        private WeakReference<MainActivity> m_ac_ref;          //allows all elements in MainActivity to be garbage collected
-        private WeatherData m_data;
-        private RESTAdapter rest_adapter;
-        private AtomicBoolean download_in_progress = new AtomicBoolean(false);  //flag for multiple threads
-        private Callback<WeatherData> m_callback = new Callback<WeatherData>() {     //generate a response from the server
-            @Override
-            public void success(WeatherData weatherData, Response response) {
-                DateFormat local = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.UK);
-                Date sunrise = new Date(weatherData.getSunrise() * 1000);  //m/s to s
-                Date sunset = new Date(weatherData.getSunset() * 1000);
-                Log.d(TAG, "\nExecution success.. Name:" + weatherData.getName()
-                        + ", Coordinates: (Latitude: " + weatherData.getLat() + ", Longtitude: " + weatherData.getLon() + ")"
-                       + String.format(Locale.UK, "Temperature: %.2f C ", weatherData.getTemp()) +
-                      "Pressure: " + weatherData.getPressure() + ", Humidity: " + weatherData.getHumidity() +
-                        "Sunrise: " + local.format(sunrise) + ", Sunset: " + local.format(sunset)  +
-                        "Country: " + weatherData.getCountry() + ", COD: " + weatherData.getCod());
-
-                m_data = weatherData;
-                if (m_ac_ref.get() != null) {                               //Update data on screen using reference to MainActivity
-                    m_ac_ref.get().updateWeatherData(m_data);
-                    m_ac_ref.get().mProgBar = (ProgressBar) m_ac_ref.get().findViewById(R.id.prog_id);
-                    m_ac_ref.get().mProgBar.setVisibility(View.INVISIBLE);
-                }
 
 
-                download_in_progress.set(false);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-                Log.d(TAG, "Failed to execute.");
-                Toast.makeText(m_ac_ref.get(), "Failed to establish connection.", Toast.LENGTH_LONG).show();
-                download_in_progress.set(false);
-                if (m_ac_ref.get() != null) {
-
-                            m_ac_ref.get().mProgBar = (ProgressBar) m_ac_ref.get().findViewById(R.id.prog_id);
-                            m_ac_ref.get().mProgBar.setVisibility(View.INVISIBLE);
-
-                }
-            }
-
-
-        };
-
-        public void TestAsyncCall(final String city) {
-
-            if (m_ac_ref.get() != null && download_in_progress.get()) {
-                Toast.makeText(m_ac_ref.get(), "Downloading information...", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            if (rest_adapter == null) {
-                rest_adapter = new RESTAdapter();
-            }
-
-            if (m_ac_ref.get() != null) {
-                m_ac_ref.get().mProgBar.setVisibility(View.VISIBLE);
-            }
-
-
-            try {                                           //Attempt to execute query to weather server
-                download_in_progress.set(true);
-                rest_adapter.getWeather(city, m_callback);
-            } catch (Exception e) {
-                Log.d(TAG, "Thread sleep error" + e);
-            }
-
-        }
-
-
-
-
-        void setAppContext(MainActivity ref) {
-            m_ac_ref = new WeakReference<>(ref);
-        }
-
-        boolean isDownloadInProgress() {
-            return download_in_progress.get();
-        } //set to true right before weather query
-    }
 }

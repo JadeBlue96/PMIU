@@ -1,11 +1,20 @@
 package com.example.user.weatherappproject.Model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by User on 18/02/2018.
  */
 
 public class Wind {
-    double speed,deg;
+    @SerializedName("speed")
+    @Expose
+    double speed;
+
+    @SerializedName("deg")
+    @Expose
+    double deg;
 
     public Wind(double speed, double deg) {
         this.speed = speed;

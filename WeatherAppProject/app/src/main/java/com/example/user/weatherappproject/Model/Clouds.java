@@ -1,11 +1,17 @@
 package com.example.user.weatherappproject.Model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by User on 18/02/2018.
  */
 
 public class Clouds {
-    int all;
+
+    @SerializedName("all")
+    @Expose
+    private int all;
 
     public Clouds(int all) {
         this.all = all;

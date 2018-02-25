@@ -1,13 +1,28 @@
 package com.example.user.weatherappproject.Model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by User on 18/02/2018.
  */
 
 public class Weather {
+
+    @SerializedName("id")
+    @Expose
     private int id;
+
+    @SerializedName("main")
+    @Expose
     String main;
+
+    @SerializedName("description")
+    @Expose
     String description;
+
+    @SerializedName("icon")
+    @Expose
     String icon;
 
     public Weather() {

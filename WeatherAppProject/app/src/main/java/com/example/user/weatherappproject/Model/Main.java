@@ -1,14 +1,31 @@
 package com.example.user.weatherappproject.Model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by User on 18/02/2018.
  */
 
 public class Main {
+        @SerializedName("temp")
+        @Expose
         double temp;
+
+        @SerializedName("pressure")
+        @Expose
         double pressure;
+
+        @SerializedName("humidity")
+        @Expose
         int humidity;
+
+        @SerializedName("temp_min")
+        @Expose
         double temp_min;
+
+        @SerializedName("temp_max")
+        @Expose
         double temp_max;
 
         public Main(double temp, int pressure, int humidity, double temp_min, double temp_max) {
