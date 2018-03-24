@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">lab_7_Resources</string>
+    <string name="frag">frag</string>
+    <string name="button1">Button</string>
+    <string name="button2">Button</string>
+    <string name="button3">Button</string>
+</resources>
