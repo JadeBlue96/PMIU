@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.user.lab_8_listview.dummy.Course;
 import com.example.user.lab_8_listview.dummy.CourseContent;
 
 /**
@@ -101,6 +102,6 @@ public class CourseFragment extends ListFragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(CourseContent.CourseItem item);
+        void onListFragmentInteraction(Course item);
     }
 }

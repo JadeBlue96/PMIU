@@ -8,6 +8,17 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="com.example.user.lab_8_listview.ItemFragment"
-    tools:listitem="@layout/fragment_item" />
+    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+    tools:context="com.example.user.lab_8_listview.CourseFragment"
+    tools:listitem="@layout/fragment_course">
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/fragment_item_list"
+        android:choiceMode="singleChoice"
+        android:id="@android:id/list">
+
+    </ListView>
+</android.support.v7.widget.RecyclerView>
+
+

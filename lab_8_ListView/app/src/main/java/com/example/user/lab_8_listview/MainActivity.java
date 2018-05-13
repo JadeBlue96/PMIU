@@ -3,30 +3,26 @@ package com.example.user.lab_8_listview;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.user.lab_8_listview.dummy.CourseContent;
+import com.example.user.lab_8_listview.dummy.Course;
+
 
 public class MainActivity extends AppCompatActivity implements CourseFragment.OnListFragmentInteractionListener {
-    private ViewPager mViewPager;
-    private TabLayout tabLayout;
-    private Toolbar toolbar;
-    private CourseRecyclerViewAdapter mViewPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,11 +30,9 @@ public class MainActivity extends AppCompatActivity implements CourseFragment.On
                         .setAction("Action", null).show();
             }
         });
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 
-
-        CourseFragment newFragment = CourseFragment.newInstance(5);
+        CourseFragment newFragment = CourseFragment.newInstance(1);
         FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
         ft.add(R.id.frame_1,newFragment,"fragment_1");
         ft.addToBackStack(null);
@@ -69,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements CourseFragment.On
 
 
     @Override
-    public void onListFragmentInteraction(CourseContent.CourseItem item) {
+    public void onListFragmentInteraction(Course item) {
 
     }
 }

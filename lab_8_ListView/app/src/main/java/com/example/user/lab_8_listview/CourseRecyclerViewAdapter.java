@@ -7,21 +7,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.user.lab_8_listview.CourseFragment.OnListFragmentInteractionListener;
-import com.example.user.lab_8_listview.dummy.CourseContent;
+import com.example.user.lab_8_listview.dummy.Course;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link com.example.user.lab_8_listview.dummy.CourseContent.CourseItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link com.example.user.lab_8_listview.dummy.CourseContent} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecyclerViewAdapter.ViewHolder> {
 
-    private final List<CourseContent.CourseItem> mValues;
+    private final List<Course> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public CourseRecyclerViewAdapter(List<CourseContent.CourseItem> items, OnListFragmentInteractionListener listener) {
+    public CourseRecyclerViewAdapter(List<Course> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,8 +36,8 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).getSubject());
+        holder.mContentView.setText(mValues.get(position).getSubject());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,13 +60,13 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public CourseContent.CourseItem mItem;
+        public Course mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = (TextView) view.findViewById(R.id.list);
+            mContentView = (TextView) view.findViewById(R.id.list);
         }
 
         @Override

@@ -5,12 +5,12 @@ package com.example.user.lab_8_listview.dummy;
  */
 
 public class Course {
-    private String id;
+    private Integer id;
     private String subject;
-    private Integer grade;
+    private Double grade;
 
 
-    public Course(String subject, Integer grade) {
+    public Course(String subject, Double grade) {
         this.id=id;
         this.subject = subject;
         this.grade = grade;
@@ -20,11 +20,11 @@ public class Course {
         return subject;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -32,16 +32,16 @@ public class Course {
         this.subject = subject;
     }
 
-    public void setGrade(Integer grade) {
+    public void setGrade(Double grade) {
         this.grade = grade;
     }
 
-    public Integer getGrade() {
+    public Double getGrade() {
         return grade;
     }
 
     @Override
     public String toString() {
-        return(subject.toString()+" "+grade.toString());
+        return(subject+" "+grade.toString());
     }
 }
